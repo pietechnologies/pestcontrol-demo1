@@ -1,0 +1,71 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+      - arena/9f3e4913-pestcontrol-demo1
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment, skipping runs queued between the run in-progress and the latest queued.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Serve the site from GitHub Actions (not the raw branch)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # "Deploy from a branch" publishes the raw repo root (index.html -> /src/main.tsx),
+          # which renders a blank page. Switch the Pages source to the Actions workflow instead.
+          if output=$(gh api --method PUT "repos/${{ github.repository }}/pages" -f build_type=workflow 2>&1); then
+            echo "PAGES_SOURCE_UPDATED"
+            echo "$output"
+          else
+            echo "PAGES_SOURCE_UPDATE_FAILED"
+            echo "$output"
+            echo "::warning::Could not switch the Pages source automatically. Set Settings > Pages > Build and deployment > Source to 'GitHub Actions' in the repo settings."
+          fi
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build with Vite
+        run: npm run build
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
