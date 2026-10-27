@@ -24,6 +24,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Serve the site from GitHub Actions (not the raw branch)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # "Deploy from a branch" publishes the raw repo root (index.html -> /src/main.tsx),
+          # which renders a blank page. Switch the Pages source to the Actions workflow instead.
+          gh api --method PUT "repos/${{ github.repository }}/pages" \
+            -f build_type=workflow \
+            -f "source[branch]=main" \
+            -f "source[path]=/" \
+            || echo "::warning::Could not update the Pages source automatically. Set Settings > Pages > Source to 'GitHub Actions' manually."
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
