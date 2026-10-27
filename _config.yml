@@ -1,0 +1,15 @@
+# GitHub Pages builds this repository with Jekyll ("Deploy from a branch").
+# Only the finished single-file app in the repository root is published;
+# everything below is source and stays out of the published site.
+exclude:
+  - src
+  - dist
+  - scripts
+  - node_modules
+  - package.json
+  - package-lock.json
+  - tsconfig.json
+  - vite.config.ts
+  - README.md
+  - .github
+  - .gitignore
