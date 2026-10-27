@@ -52,41 +52,47 @@ After analyzing the live website of **First Choice Termite and Pest Control LLC*
 
 ---
 
-## 🚀 How to Run on GitHub Pages (In 2 Minutes)
+## 🚀 How to Run on GitHub Pages
 
-This app is configured with `vite-plugin-singlefile`, creating a self-contained bundle in `dist/index.html` with zero external server dependencies, perfect for GitHub Pages.
+This app is configured with `vite-plugin-singlefile`, which produces a **self-contained** `dist/index.html` — one file with the JavaScript and CSS inlined, no external server dependencies, perfect for GitHub Pages.
 
-### Option A: Via GitHub Pages Settings (Easiest)
-1. Push this repository to GitHub:
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit of First Choice Pest Control revamp"
-   git remote add origin https://github.com/<your-username>/<your-repo-name>.git
-   git branch -M main
-   git push -u origin main
-   ```
+### Repository layout
+
+| Path | What it is |
+| --- | --- |
+| `src/` | The Vite project (entry point `src/index.html`, React sources) |
+| `dist/` | Build output — `dist/index.html` (git-ignored) |
+| `index.html` | **The published app.** `npm run build` copies the built file here, because GitHub Pages in *"Deploy from a branch"* mode serves the root of the branch. |
+| `_config.yml` | Keeps the source out of the published Jekyll build |
+| `.github/workflows/deploy.yml` | Builds, publishes and deploys on every push to `main` |
+
+### Option A: GitHub Actions (recommended)
+
+1. Push the repository to GitHub.
 2. In GitHub, go to **Settings** > **Pages**.
-3. Under **Build and deployment** > **Source**, choose **GitHub Actions** and select the standard **Static HTML** or **Vite** starter, OR:
-4. Build locally:
-   ```bash
-   npm run build
-   ```
-5. Deploy the `dist/` directory using the `gh-pages` branch or tool:
-   ```bash
-   npx gh-pages -d dist
-   ```
+3. Under **Build and deployment** > **Source**, choose **GitHub Actions**.
 
-### Option B: Local Development
+From then on, every push to `main` rebuilds the app and deploys it — no manual step.
+
+### Option B: "Deploy from a branch" (works out of the box)
+
+If the source stays on **Deploy from a branch** (`main`, path `/`), GitHub serves the root of the branch, and the root `index.html` is already the finished app. The `Deploy to GitHub Pages` workflow keeps that file in sync: after every build it commits the refreshed `index.html` back to `main`.
+
+> Publishing the raw source instead (an `index.html` that points at `/src/main.tsx`) renders a **blank page**, because Pages never compiles TypeScript.
+
+### Option C: Local Development
 ```bash
 # Install dependencies
 npm install
 
-# Start local development server
+# Start local development server -> http://localhost:5173
 npm run dev
 
-# Build production bundle
+# Build the production bundle and publish it to the repository root
 npm run build
+
+# Preview the production build
+npm run preview
 ```
 
 ---
