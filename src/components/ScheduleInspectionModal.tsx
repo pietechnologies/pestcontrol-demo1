@@ -94,7 +94,9 @@ export const ScheduleInspectionModal: React.FC<ScheduleInspectionModalProps> = (
           </div>
 
           <button
+            type="button"
             onClick={onClose}
+            aria-label="Close inspection scheduler"
             className="p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />

@@ -30,13 +30,27 @@ export function App() {
     setIsBookingOpen(true);
   };
 
+  const handleNavigateToSection = (sectionId: string) => {
+    setIsAuditActive(false);
+    // When leaving the audit, wait for the main website to render before scrolling.
+    window.setTimeout(() => {
+      document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+    }, isAuditActive ? 100 : 0);
+  };
+
   const handleOpenQuote = (initialPest?: string) => {
     if (initialPest) setCalculatorPest(initialPest);
-    setIsAuditActive(false);
-    const el = document.getElementById('calculator');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
+    handleNavigateToSection('calculator');
+  };
+
+  const handleToggleAudit = () => {
+    setIsAuditActive((active) => !active);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleOpenAudit = () => {
+    setIsAuditActive(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSelectPestForService = (pestName: string) => {
@@ -56,25 +70,16 @@ export function App() {
     setIsBookingOpen(true);
   };
 
-  const handleNavigateFromAudit = (sectionId: string) => {
-    setIsAuditActive(false);
-    setTimeout(() => {
-      const el = document.getElementById(sectionId);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, 100);
-  };
-
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-[#D9252A] selection:text-white">
+    <div id="top" className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-[#D9252A] selection:text-white">
       
       {/* Sticky Navigation */}
       <Navbar
         onOpenBooking={() => handleOpenBooking()}
         onOpenQuote={() => handleOpenQuote()}
         isAuditActive={isAuditActive}
-        onToggleAudit={() => setIsAuditActive(!isAuditActive)}
+        onToggleAudit={handleToggleAudit}
+        onNavigateToSection={handleNavigateToSection}
       />
 
       {/* Main Content: Either the Full Competitor Audit Dashboard or the Revamped Live Website */}
@@ -82,7 +87,7 @@ export function App() {
         <main className="flex-1">
           <CompetitorAuditView
             onClose={() => setIsAuditActive(false)}
-            onNavigateToSection={handleNavigateFromAudit}
+            onNavigateToSection={handleNavigateToSection}
           />
         </main>
       ) : (
@@ -91,7 +96,6 @@ export function App() {
           <Hero
             onOpenBooking={() => handleOpenBooking()}
             onOpenQuote={handleOpenQuote}
-            onOpenAudit={() => setIsAuditActive(true)}
           />
 
           {/* Instant Price & Plan Calculator */}
@@ -143,7 +147,7 @@ export function App() {
 
       {/* Footer */}
       <Footer
-        onOpenAudit={() => setIsAuditActive(true)}
+        onOpenAudit={handleOpenAudit}
         onOpenBooking={() => handleOpenBooking()}
       />
 
@@ -151,7 +155,7 @@ export function App() {
       <EmergencyStickyBar
         onOpenBooking={() => handleOpenBooking()}
         onOpenQuote={() => handleOpenQuote()}
-        onOpenAudit={() => setIsAuditActive(!isAuditActive)}
+        onOpenAudit={handleToggleAudit}
       />
 
       {/* Schedule Free Inspection Modal */}
