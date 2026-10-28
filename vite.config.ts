@@ -15,6 +15,14 @@ export default defineConfig(({ command }) => ({
   root: path.resolve(__dirname, "src"),
   // Project page -> https://<user>.github.io/<repo>/ (dev server stays on "/").
   base: command === "serve" ? "/" : "/pestcontrol-demo1/",
+  server: {
+    host: "0.0.0.0",
+    allowedHosts: [".e2b.app"],
+  },
+  preview: {
+    host: "0.0.0.0",
+    allowedHosts: [".e2b.app"],
+  },
   plugins: [react(), tailwindcss(), viteSingleFile()],
   resolve: {
     alias: {

@@ -1,10 +1,5 @@
 import React from 'react';
-import { 
-  PhoneCall, 
-  Calculator, 
-  Calendar, 
-  Sparkles 
-} from 'lucide-react';
+import { BarChart3, Calculator, CalendarDays, Phone } from 'lucide-react';
 
 interface EmergencyStickyBarProps {
   onOpenBooking: () => void;
@@ -15,48 +10,43 @@ interface EmergencyStickyBarProps {
 export const EmergencyStickyBar: React.FC<EmergencyStickyBarProps> = ({
   onOpenBooking,
   onOpenQuote,
-  onOpenAudit
+  onOpenAudit,
 }) => {
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 bg-[#0B1530]/95 backdrop-blur-md border-t-2 border-[#1D3B8B] p-2 sm:hidden shadow-2xl">
-      <div className="grid grid-cols-4 gap-1.5">
-        
-        {/* Call Now */}
+    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white px-2 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] shadow-[0_-5px_20px_rgba(15,35,75,0.08)] sm:hidden">
+      <div className="grid grid-cols-4 gap-1">
         <a
           href="tel:7704827322"
-          className="flex flex-col items-center justify-center p-2 rounded-xl bg-[#D9252A] text-white font-black text-[11px] shadow-sm active:scale-95 transition-transform"
+          aria-label="Call First Choice at (770) 482-7322"
+          className="flex min-h-[52px] flex-col items-center justify-center gap-1 rounded-lg text-[11px] font-bold text-[#263753] hover:bg-slate-50"
         >
-          <PhoneCall className="w-4 h-4 mb-0.5" />
-          <span>Call 24/7</span>
+          <Phone aria-hidden="true" className="h-4 w-4 text-[#c9232b]" />
+          <span>Call</span>
         </a>
-
-        {/* Instant Quote */}
         <button
+          type="button"
           onClick={onOpenQuote}
-          className="flex flex-col items-center justify-center p-2 rounded-xl bg-blue-950 text-blue-100 hover:text-white font-bold text-[11px] border border-blue-800 active:scale-95 transition-transform cursor-pointer"
+          className="flex min-h-[52px] cursor-pointer flex-col items-center justify-center gap-1 rounded-lg text-[11px] font-bold text-[#263753] hover:bg-slate-50"
         >
-          <Calculator className="w-4 h-4 text-[#F87171] mb-0.5" />
+          <Calculator aria-hidden="true" className="h-4 w-4 text-[#c9232b]" />
           <span>Quote</span>
         </button>
-
-        {/* Schedule */}
         <button
+          type="button"
           onClick={onOpenBooking}
-          className="flex flex-col items-center justify-center p-2 rounded-xl bg-blue-950 text-blue-100 hover:text-white font-bold text-[11px] border border-blue-800 active:scale-95 transition-transform cursor-pointer"
+          className="flex min-h-[52px] cursor-pointer flex-col items-center justify-center gap-1 rounded-lg bg-[#c9232b] text-[11px] font-bold text-white hover:bg-[#a91d24]"
         >
-          <Calendar className="w-4 h-4 text-[#F87171] mb-0.5" />
+          <CalendarDays aria-hidden="true" className="h-4 w-4" />
           <span>Schedule</span>
         </button>
-
-        {/* Audit View */}
         <button
+          type="button"
           onClick={onOpenAudit}
-          className="flex flex-col items-center justify-center p-2 rounded-xl bg-amber-400/20 text-amber-300 font-bold text-[11px] border border-amber-400/40 active:scale-95 transition-transform cursor-pointer"
+          className="flex min-h-[52px] cursor-pointer flex-col items-center justify-center gap-1 rounded-lg text-[11px] font-bold text-[#263753] hover:bg-slate-50"
         >
-          <Sparkles className="w-4 h-4 text-amber-300 mb-0.5" />
+          <BarChart3 aria-hidden="true" className="h-4 w-4 text-[#c9232b]" />
           <span>Audit</span>
         </button>
-
       </div>
     </div>
   );
